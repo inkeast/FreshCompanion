@@ -1,0 +1,182 @@
+<template>
+  <div class="card">
+    <div class="nav">
+      <div class="title">
+        <image src="/Common/card/remind.png"></image>
+        <text class="text-title">保质期提醒</text>
+      </div>
+      <div class="inform">
+        <div class="nav-item" >
+          <image class="preview" src="{{icon1}}
+" onclick="fanhui"></image>
+          <text class="name">{{shelfdate1}}天</text>
+        </div>
+        <div class="nav-item" >
+          <image class="preview" src="{{icon2}}
+" onclick="fanhui"></image>
+          <text class="name">{{shelfdate2}}天</text>
+        </div>
+        <div class="nav-item" >
+          <image class="preview" src="{{icon3}}
+" onclick="fanhui"></image>
+          <text class="name">{{shelfdate3}}天</text>
+        </div>
+        <div class="nav-item" >
+          <image class="preview" src="{{icon4}}
+" onclick="fanhui"></image>
+          <text class="name">{{shelfdate4}}天</text>
+        </div>
+        <div class="take-photo">
+          <image class="camera" src="/Common/paizhao.png" onclick="photo"></image>
+          <text id="camera-name" class="name">拍照</text>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</template>
+
+<style>
+.card {
+  flex-direction: row;
+  height: 240px;
+  width: 100%;
+  padding: 10px;
+  background-color: #E4EAF0;
+  border-radius: 25px;
+}
+
+.nav {
+  height: 100%;
+  width: 100%;
+  padding-top: 18px;
+  flex-direction: column;
+
+}
+.title{
+    border-bottom-width: 1px;
+      border-color:#6495ed;
+}
+
+.inform{
+  margin-top: 25px;
+
+}
+.nav-item {
+  width: 225px;
+  height: 176px;
+  flex-direction: column;
+  align-items: center;
+
+}
+.preview {
+  height: 88px;
+  width: 88px;
+  border-radius: 44px;
+  margin-bottom: 8px;
+  background-color: #D0D7DE;
+}
+.name {
+  width: 225px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 25px;
+  color: rgba(0,0,0,0.80);
+  text-align: center;
+}
+.take-photo{
+  flex-direction: column;
+  height: 176px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+        /*justify-content: center;上下居中*/
+    align-items: center;/**左右居中 */
+}
+.camera{
+  width: 110px;
+  height: 110px;
+}
+.camera-name{
+  margin-top: 1px;
+}
+
+</style>
+
+<script>
+import router from '@system.router'
+import data from '../data.js'
+import fetch from '@system.fetch'
+
+
+export default {
+  private: {
+    title: '卡片示例',
+    food:[],
+    shelfdate:[],
+    icon1:"",
+    icon2:"",
+    icon3:"",
+    icon4:"",
+    shelfdate1:0,
+    shelfdate2:1,
+    shelfdate3:2,
+    shelfdate4:3,
+  },
+  
+  onReady() {
+  this.shelfdate4 = 10;
+     var now = new Date();
+   this.shelfdate4 = 20;
+    fetch.fetch({
+     url:"http://47.95.221.147:8080/categories",
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       var c = 0
+       this.shelfdate4 = 30;
+       for(var val of res.data.ingredients){
+         var fdate = new  Date((val.shelflife).slice(5,7)+"-"+(val.shelflife).slice(8,10)+"-"+(val.shelflife).slice(0,4))
+        this.shelfdate[c++] = parseInt((fdate  -  now)  /  1000  /  60  /  60  /24);
+        if(c == 1){
+            this.icon1 = val.icon;
+            this.shelfdate1 = parseInt((fdate  -  now)  /  1000  /  60  /  60  /24);
+        }else if(c==2){
+            this.icon2 = val.icon;
+            this.shelfdate2 = parseInt((fdate  -  now)  /  1000  /  60  /  60  /24);
+        }else if(c==3){
+            this.icon3 = val.icon;
+            this.shelfdate3 = parseInt((fdate  -  now)  /  1000  /  60  /  60  /24);
+        }else {
+            this.icon4 = val.icon;
+            this.shelfdate4 = parseInt((fdate  -  now)  /  1000  /  60  /  60  /24);
+        }
+       }
+
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+       this.shelfdate4 = 99;
+     }
+   })
+  
+  }
+  ,
+   fanhui(){
+    //导航到详情页面并且将分类的id传递过去
+    router.push({
+      uri:'/page0',
+      params:{}
+    })
+  },
+  photo(){
+    router.push({
+      uri:'/BarCodeDecoder',
+      params:{}
+    })
+  }
+
+  
+}
+</script>

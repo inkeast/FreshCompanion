@@ -1,0 +1,88 @@
+<template>
+    <div>
+        <input class="btn" type="button" value="开启智能感知" onclick="startenvir()" />   
+    </div>
+         
+</template>
+<style>
+    text {
+        font-size: 40px;
+        text-align: center;
+    }
+      .btn {
+    width: 750px;
+    height: 86px;
+    margin-top: 75px;
+    border-radius: 43px;
+    background-color: #09ba07;
+    font-size: 30px;
+    color: #ffffff;
+  }
+</style>
+<script>
+import wifi from '@system.wifi'
+import notification from '@system.notification'
+// import adapter from 'webrtc-adapter'
+
+var Athome = false
+var HomeWiFi = 'wisteria'  
+var MailWiFi = 'AURORA' 
+export default {
+  private: {
+    title: '智能情景'
+  },    
+  startenvir(){
+    setInterval(function(){envir()}, 5000)
+  //   notification.show({
+  //   contentTitle: '智能场景感知',
+  //   contentText: `开始感知`
+  // }) 
+  }
+}
+function envir(){
+  wifi.scan({
+    success: function() {},
+    fail: function(code) {
+  //         notification.show({
+  //   contentTitle: '智能场景感知',
+  //   contentText: `扫描失败${code}`
+  // }) 
+    }
+  })
+  wifi.onscanned = function(data) {
+    var wifiaim 
+    if(Athome == true){
+      wifiaim = MailWiFi
+    }else{
+      wifiaim = HomeWiFi
+    }
+    for (const i in data.wifiList) {
+      // if(data.wifiList[i].SSID == wifiaim){
+        if(true){
+        if(Athome){
+          notification.show({
+            contentTitle: '智能场景感知',
+            contentText: `检测到您已到达商店，点击以获取冰箱信息`,
+              clickAction: {
+    uri: '/page0'
+  }
+          }) 
+          Athome = false
+          return
+        }
+        else{
+          notification.show({
+            contentTitle: '智能场景感知',
+            contentText: `欢迎回家，点击来看看吃点什么吧`,
+              clickAction: {
+    uri: '/page3'
+  }
+          }) 
+          Athome = true
+          return
+        }
+      }
+    }
+  }
+}
+</script>

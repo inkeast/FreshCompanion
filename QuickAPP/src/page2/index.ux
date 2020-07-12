@@ -1,0 +1,256 @@
+<template>
+  <div class="content">
+  <div class="content-top">
+    <div class="content-top-takePhoto">
+      <image class="takePhoto" src="/Common/paizhao.png" onclick="takePhoto" id="scancode"></image>
+      <text>拍照检测</text>
+    </div>
+    <div class="content-top-photoAlbum">
+      <image class="photoAlbum" src="/Common/photoAlbum.png" onclick="selectPhoto" id="scancode"></image>
+      <text>本地相册</text>
+    </div>
+    
+  </div>
+  <div class="foot-wrap">
+      <div class="foot-box" for="tabList" onclick="routerPush($idx)">
+        <image class="down-logo" src="{{$idx===2?$item.imgActive:$item.imgNormal}}"></image>
+        
+      </div>
+    </div>
+     <div class="button-middle" onclick="routerPush(2)">
+    <image src="../Common/images/xiangji2.png"></image>
+  </div>
+  </div>
+</template>
+
+<script>
+import media from '@system.media'
+import router from '@system.router'
+import data from '../data.js'
+import prompt from '@system.prompt'
+//import Quagga from 'quagga' 貌似不能调用第三方的js
+ //const Quagga = require('quagga').default
+export default {
+  private: {
+    space:[],
+    tabList: [],
+  },
+  protected: {
+    isLogin: 0,
+    userName: '路过的一只'
+  },
+  onInit() {
+    let that = this
+    that.tabList = data.tabData
+    
+  },
+  //扫描二维码对应的函数
+  openWeb (allowthirdpartycookies) {
+      router.push({
+        uri: '/component/media/web/detail',
+        params: {
+          url: 'https://www.quickapp.cn/',
+          allowthirdpartycookies
+        }
+      })
+    },
+  onMenuPress() {
+    this.$app.$def.showMenu()
+  },
+  routerPush: function(index) {
+    if (index != 2) {
+      if (index == 1||index== 0){
+        if(index==1){router.replace({
+          uri: '/page1',
+          params: {
+            tabIndex: index,
+            userName: this.userName,
+            isLogin: this.isLogin
+          }
+        })}else{
+          router.replace({
+            uri: '/page0',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }  
+      }else{
+        if(index==3){
+          router.replace({
+            uri: '/page3',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }else{
+          router.replace({
+            uri: '/page4',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })  
+        }
+        
+      }
+      
+    }
+  },
+ takePhoto(){
+    media.takePhoto({
+      success: function(data) {
+        console.log(`handling success: ${data.uri}`)
+        
+        
+        prompt.showDialog({
+            title: '查询结果',
+            message: '当前条码：6902083881085\n商品名：哇哈哈AD钙奶220ml\n占用空间：0.22L\n冰箱剩余空间：65.94L\n预计可放：299个',
+            buttons: [
+              {
+                text: '我知道了',
+                color: '#33dd44'
+              }
+            ],
+            success: function(data) {
+              console.log('handling callback')
+            },
+            cancel: function() {
+              console.log('handling cancel')
+            },
+            fail: function(data, code) {
+              console.log(`handling fail, code = ${code}`)
+            }
+          })
+        
+        
+        },
+      fail: function(data, code) {
+        console.log(`handling fail, code = ${code}`)}
+    })
+  },
+  selectPhoto(){
+    media.pickImage({
+      success: function(data) {
+        console.log(`handling success: ${data.uri}`)
+      },
+      fail: function(data, code) {
+        console.log(`handling fail, code = ${code}`)
+      }
+    })
+  },
+/* 需要根据报错安装一些包，安装完之后，好像还有报错
+  Quagga:init({
+    inputStream : {
+      name : "Live1",
+      type : "LiveStream",
+      target: document.querySelector('#scancode')    // Or '#yourElement' (optional)
+    },
+    decoder : {
+      readers : ["code_128_reader"],
+      debug: {
+      drawBoundingBox: false,
+      showFrequency: false,
+      drawScanline: false,
+      showPattern: false
+  },
+  multiple: false
+    }
+  }, function(err) {
+      if (err) {
+          console.log(err);
+          return
+      }
+      console.log("Initialization finished. Ready to start");
+      Quagga.start();
+  })*/
+
+
+}
+</script>
+<style>
+  .content{
+    flex-direction: column;
+    justify-content: center;
+     align-items: center;/**左右居中 */
+     background-image: url('../Common/icon/容量.jpg');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+    /* 在水平方向和竖直方向上重复绘制 */
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+  }
+  .content-top{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;/**左右居中 */
+
+  }
+  .content-top-takePhoto{
+    width:100%;
+    height: 400px;
+    flex-direction: column;
+    justify-content: center;
+     align-items: center;/**左右居中 */
+    border-bottom-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;
+
+  }
+  .content-top-photoAlbum{
+    width: 100%;
+    height: 500px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;/**左右居中 */
+    border-top-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;
+  }
+  /**下方栏 */
+  .foot-wrap {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+  padding: 0 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  border-top-color: #e6e6e6;
+  background-color: #f4f5f7;
+}
+.foot-box {
+  height: 110px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 15px;
+  padding-bottom: 10px;
+}
+.foot-box text {
+  font-size: 30px;
+}
+
+.button-middle{
+  position:fixed;
+  right: 285px;
+  bottom: 20px;
+  width: 170px;
+  height: 170px;
+  
+}
+
+.item-container {
+    margin-bottom: 50px;
+    margin-right: 60px;
+    margin-left: 60px;
+    flex-direction: column;
+  }
+  .down-logo{
+  width: 110px;
+}
+</style>

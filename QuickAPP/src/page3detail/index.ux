@@ -1,0 +1,430 @@
+<template>
+  <div class="background">
+    <div content>
+      <div top>
+        <div class="fanhui" onclick="fanhui">
+          <image src="../Common/fanhui.png"></image>
+        </div>
+      </div>
+     <div class="middle">
+        <div class="middle-top">
+          <div class="middle-top-left">
+            <div class="name-item">
+              <text class="name-item-text">菜谱详情</text>
+            </div>
+            <text class="name">{{Mname}}</text>
+          </div>
+          <div class="middle-top-right">
+            <div class="center">
+              <image class="photo" src="{{Image}}"></image>
+            </div>
+            
+          </div>
+        </div>
+        <div class="middle-middle">
+          <div class="middle-middle-left">
+            <div class="item-material">
+              <text class="material">原料</text>
+            </div>
+          </div>
+          <div class="middle-middle-right">
+            <list>
+              <list-item type="text">
+              <text class="materials">{{Ingredients}}</text>
+              </list-item>
+            </list>
+          </div>
+        </div>
+        <div class="middle-down">
+          <div class="middle-down-left">
+            <div class="item-do">
+              <text class="do">做法</text>
+            </div>
+          </div>
+          <div class="middle-down-right">
+            <list>
+              <list-item type="text">
+              <text class="dolist">{{Steps}}</text>
+              </list-item>
+            </list>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="down">
+        <div class="foot-wrap">
+          <div class="foot-box" for="tabList" onclick="routerPush($idx)">
+            <image class="down-logo" src="{{$idx===3?$item.imgActive:$item.imgNormal}}"></image>
+            
+          </div>
+        </div>
+        <div class="button-middle" onclick="routerPush(2)">
+          <image src="../Common/images/xiangji2.png"></image>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import fetch from '@system.fetch'
+import prompt from '@system.prompt'
+import data from '../data.js'
+
+export default {
+  private: {
+    space:[],
+    tabList: [],
+    categories:[ ]
+  },
+  protected: {
+    isLogin: 0,
+    userName: '路过的一只',
+    Mname: undefined,
+    Image:undefined,
+    Ingredients:undefined,
+    Steps:undefined
+
+  },
+  
+  onInit() {
+    let that = this
+    that.tabList = data.tabData
+
+    fetch.fetch({
+     url:"http://192.168.1.6:8080/categories",
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.ingredients}')
+       console.log('the data of the response:${res.data.ingredient[0].icon}')
+       
+       this.categories=res.data
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+     }
+   })
+
+
+
+
+  },
+
+  
+
+  onMenuPress() {
+    this.$app.$def.showMenu()
+  },
+  routerPush: function(index) {
+    if (index != 0) {
+      if (index == 1||index== 2){
+        if(index==1){router.replace({
+          uri: '/page1',
+          params: {
+            tabIndex: index,
+            userName: this.userName,
+            isLogin: this.isLogin
+          }
+        })}else{
+          router.replace({
+            uri: '/BarCodeDecoder',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }  
+      }else{
+        if(index==3){
+          router.replace({
+            uri: '/page3',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }else{
+          router.replace({
+            uri: '/page4',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })  
+        }
+        
+      }
+      
+    }
+  },
+  ChangeDetail(id,name,icon,num){
+    //导航到详情页面并且将分类的id传递过去
+    router.push({
+      uri:'/page0detail',
+      params:{id,name,icon,num}
+    })
+  },
+   fanhui(){
+    //导航到详情页面并且将分类的id传递过去
+    router.push({
+      uri:'/page3',
+      params:{}
+    })
+  }
+}
+
+
+
+
+</script>
+
+<style>
+  .background {
+   
+     background-image: url('../Common/icon/菜谱详情.jpg');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+    /* 在水平方向和竖直方向上重复绘制 */
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+    padding-left :20px; 
+    padding-right :20px; 
+
+        flex-direction: column;
+      align-items: center;/**左右居中 */
+  }
+
+  .middle{
+
+    margin-top: 180px;
+    background-color:#ffffff;
+    border-radius: 40px;
+    width: 630px;
+    height: 1200px;
+    flex-direction: column;
+
+  }
+  .middle-top{
+    margin-bottom: 20px;
+    height: 600px;
+  }
+  .middle-top-left{
+    flex-direction: column;
+    padding: 30px;
+    align-items: center;
+    width: 275px;
+    justify-content: center;
+  }
+  .name-item{
+    border-radius: 15px;
+    margin-top: 0px;
+    background-color:#9089f4; 
+    align-content: center;
+    padding-top: 10px;
+    padding-bottom:10px;
+    padding-left: 40px;
+    padding-right: 40px;
+  } 
+  .name-item-text{
+    color:#ffffff;
+  }
+  .name{
+    font-size: 35px;
+    margin-top: 10px;
+  }
+  .middle-top-right{
+    flex-direction: column;
+    width: 375px;
+    height: 300px;
+
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+  }
+  .photo{
+    width: 280px;
+    height: 250px;
+  }
+  .middle-middle{
+    height: 300px;
+    flex-direction: row;
+    border-bottom-width: 1px;
+    border-color:#b9b9b9;
+    border-top-width: 1px;
+    border-color:#b9b9b9;  
+      
+  }
+  .middle-middle-left{
+    flex-direction: column;
+    width: 200px;
+    align-items:center;
+    padding-top: 25px;
+    border-right-width: 1px;
+    border-color:#b9b9b9;  
+  }
+  .item-material{
+    flex-direction: column;
+    justify-content: center;
+    height: 60px;
+    border-radius: 15px;
+    border-width: 1px;/**整个页面的边框 */
+    border-color:#9089f4;
+    background-color:#9089f4; 
+    padding-top: 10px;
+    padding-bottom:10px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .material{
+   font-size: 30px; 
+   color:#ffffff;   
+  }
+  .middle-middle-right{
+    width: 440px;
+    padding: 20px;   
+  }
+  .materials{
+    font-size: 30px;
+    color: #9089f4;
+    margin-bottom: 70px;
+  }
+  .middle-down{
+    flex-direction: row;
+    margin-top: 0px;  
+  }
+  .middle-down-left{
+    flex-direction: column;
+    width: 200px;
+
+    align-items:center;
+    padding-top: 25px;  
+    border-right-width: 1px;/**整个页面的边框 */
+    border-color:#b9b9b9;  
+  }
+  .item-do{
+    flex-direction: column;
+    justify-content: center;
+    height: 60px;
+    border-radius: 15px;
+    margin-top: 0px;
+    border-width: 1px;/**整个页面的边框 */
+    border-color:#9089f4;
+    background-color: #9089f4;
+    padding-top: 10px;
+    padding-bottom:10px;
+    padding-left: 30px;
+    padding-right: 30px;   
+  }
+  .do{
+    font-size: 30px; 
+    color:#ffffff;  
+  }
+  .middle-down-right{
+    width: 440px;
+    padding: 20px;
+
+  }
+  .tutorial-page{
+    margin-top: 450px;/**距离其他item距离 */    
+    margin-bottom: 150px;
+  }
+  .content-item{
+    background-color:#ffffff;
+    border-radius: 40px;
+    height: 250px;
+    margin-top: 20px;
+    border-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;  
+    padding: 20px;
+  }
+  .content-item-left{
+    width: 200px;
+    padding:20px;
+    border-radius: 80px;
+ 
+  }
+  .image{
+    width: 180px;
+  }
+  .content-item-middle{
+    flex-direction: column;
+    padding: 20px;
+  }
+  .name{
+    font-size: 50px;
+    color: #000000;
+  }
+  .food-inform{
+    margin-top: 40px;
+  }
+  .food-day{
+    margin-left: 30px;
+  }
+  .content-item-right{
+    width: 100px;
+    padding-left: 50px;
+  }
+  .edit{
+    width: 50px;
+    margin-right: 0px;
+  }
+  .foot-wrap {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+  padding: 0 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  border-top-color: #e6e6e6;
+  background-color: #f4f5f7;
+}
+.foot-box {
+  height: 110px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 15px;
+  padding-bottom: 10px;
+}
+.foot-box text {
+  font-size: 30px;
+}
+
+.button-middle{
+  position:fixed;
+  right: 285px;
+  bottom: 20px;
+  width: 170px;
+  height: 170px;
+  
+}
+.fanhui{
+  position:fixed;
+  top: 15px;
+  left: 15px;
+  width: 40px;
+  height: 40px;
+  
+}
+.down-logo{
+  width: 110px;
+}
+</style>
+
+
+
+
+
+

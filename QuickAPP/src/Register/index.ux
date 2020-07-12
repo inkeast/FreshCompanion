@@ -1,0 +1,96 @@
+<template>
+    <div class="content">
+        
+            <image class="content-logo" src="/Common/iceLogo.png"></image>
+       
+            <text class="content-title">注册</text>
+        
+        <div class="content-form">
+            <div class="user-back">
+                <input class="user" type="number" placeholder="请输入用户名"></input>
+            </div>
+            <div class="password-back">
+                <input class="password" type="text" placeholder="请输入密码"></input>
+            </div>
+            <div class="button-back">
+                <input class="content-form-signup" type="button" value="注册"></input>
+            </div>
+        </div>
+        <text class="content-login-description">已有账户？</text>
+        <div >
+             <a class="content-login-link" href="/Account" >登录</a>
+        </div>
+    </div>
+</template>
+
+<script>
+
+</script>
+
+<style>
+.content{
+    flex-direction: column;
+    text-align: center;
+    margin: 15px;
+    align-items: center;/**左右居中 */
+}
+.content-logo{
+    width: 150px;
+    height:150px;
+    margin-top: 200px;
+}
+.content-title{
+    margin: 10px 0 25px 0;
+    font-size: 60px;
+    color: #747474;
+    font-weight: normal;
+}
+.content-form{
+     width: 600px;
+    padding: 36px 30px 30px 30px;
+    border: 1px solid  #dedede;
+    text-align: center;
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+.user{
+       width: 100%;
+    height: 50px;
+    padding: 10px;
+    font-size: 20px;
+    border: 1px solid  #cccbcb;
+    border-radius: 7px;
+}
+
+.password{
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    font-size: 20px;
+    border: 1px solid  #cccbcb;
+    border-radius: 7px;
+}
+.content-form-signup {
+    width: 500px;
+    margin: 0px;
+    padding: 10px;
+    border: 1px solid  #cccbcb;
+    border-radius: 7px;
+    font-size: 35px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #0dbfdd;
+    margin-top: 20px;
+}
+.content-login-description {
+    margin-top: 100px;
+    color: #747474;
+}
+.content-login-link {
+    font-size: 35px;
+    color: #0dbfdd;
+    text-decoration: none;
+}
+</style>

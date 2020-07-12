@@ -1,0 +1,8 @@
+http:
+  port: 8080
+server:
+  port: 443
+  ssl:
+    key-store: classpath:freshcompanion.top.pfx
+    key-store-password: tgB9z2CN
+    keyStoreType: PKCS12

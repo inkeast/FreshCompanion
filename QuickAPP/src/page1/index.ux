@@ -1,0 +1,383 @@
+<template>
+  
+    
+  
+  <div class="content">
+    <div class="top">
+      <div class="top-text">
+        <text class="text-top-1">剩余总空间：</text>
+        <text class="text-top-2">{{(space3.SurplusSpace+space2.SurplusSpace+space1.SurplusSpace).toFixed(2)}}L</text>
+      </div>
+    </div>
+    
+       <list class="capacity-page">
+    <block class="out">
+      <list-item class="capacity-item" type="space-item" >
+        <div class="capacity-item-left" >
+          <image class="image" src="http://47.95.221.147:8080/icon?name=b1_1.jpg" onclick='topic_preview(0)' ></image>
+        </div>
+        <div class="capacity-item-middle">
+          <div class="capacity-item-middle-name">
+            <image class="star" src="/Common/space/star.png"></image>
+            <text class="name">上层冷冻柜</text>
+          </div>
+          <text class="text-1" onclick='topic_preview(0)' >点击查看大图</text>
+        </div>
+        <div class="inform">
+          <text class="capacity-total">共：{{space1.MAXSpace}}L</text>
+          <text class="capacity-used">已用：{{space1.used}}L</text>
+          <text class="capacity-residue">剩余：{{space1.SurplusSpace}} L </text>
+        </div>
+      </list-item>
+      <list-item class="capacity-item" type="space-item" >
+        <div class="capacity-item-left" >
+          <image class="image" src="http://47.95.221.147:8080/icon?name=b1_2.jpg" onclick="topic_preview('http://47.95.221.147:8080/icon?name=b1_2.jpg')" ></image>
+        </div>
+        <div class="capacity-item-middle">
+          <div class="capacity-item-middle-name">
+            <image class="star" src="/Common/space/star.png"></image>
+            <text class="name">中层冷冻柜</text>
+          </div>
+          <text class="text-1" onclick="topic_preview('http://47.95.221.147:8080/icon?name=b1_2.jpg')" >点击查看大图</text>
+        </div>
+        <div class="inform">
+          <text class="capacity-total">共：{{space2.MAXSpace}}L</text>
+          <text class="capacity-used">已用：{{space2.used}}L</text>
+          <text class="capacity-residue">剩余：{{space2.SurplusSpace}}L </text>
+        </div>
+      </list-item>
+      <list-item class="capacity-item" type="space-item" >
+        <div class="capacity-item-left" >
+          <image class="image" src="http://47.95.221.147:8080/icon?name=b1_3.jpg" onclick="topic_preview('http://47.95.221.147:8080/icon?name=b1_3.jpg')" ></image>
+        </div>
+        <div class="capacity-item-middle">
+          <div class="capacity-item-middle-name">
+            <image class="star" src="/Common/space/star.png"></image>
+            <text class="name">下层冷冻柜</text>
+          </div>
+          <text class="text-1" onclick="topic_preview('http://47.95.221.147:8080/icon?name=b1_3.jpg')" >点击查看大图</text>
+        </div>
+        <div class="inform">
+          <text class="capacity-total">共：24L</text>
+          <text class="capacity-used">已用：{{space3.used}}L</text>
+          <text class="capacity-residue">剩余：{{space3.SurplusSpace}}L </text>
+        </div>
+      </list-item>
+   
+    </block>
+  </list>
+
+     
+
+    
+  <div class="foot-wrap">
+      <div class="foot-box" for="tabList" onclick="routerPush($idx)">
+        <image class="down-logo" src="{{$idx===1?$item.imgActive:$item.imgNormal}}"></image>
+      </div>
+      
+    </div>
+     <div class="button-middle" onclick="routerPush(2)">
+    <image src="../Common/images/xiangji2.png"></image>
+  </div>
+  </div>
+
+</template>
+
+<script>
+import router from '@system.router'
+import data from '../data.js'
+import media from '@system.media'
+import fetch from '@system.fetch'
+export default {
+  private: {
+   space1:[],
+   space2:[],
+   space3:[],
+    tabList: [],
+    imgList: [
+      "http://47.95.221.147:8080/icon?name=b1_1.jpg",
+     "http://47.95.221.147:8080/icon?name=b1_2.jpg",
+     "http://47.95.221.147:8080/icon?name=b1_3.jpg"
+    ]
+  },
+  protected: {
+    isLogin: 0,
+    userName: '路过的一只'
+  },
+  onInit(){
+    let that = this
+    that.tabList = data.tabData
+
+    fetch.fetch({
+     url:"http://47.95.221.147:8080/space?UserID=1&SpaceNo=1",
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.SpaceNo}')
+       console.log('the data of the response:${res.data.SurplusSpace}')
+       res.data.used = (res.data.MAXSpace - res.data.SurplusSpace).toFixed(2)
+       this.space1=res.data
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+     }
+   })
+  
+  fetch.fetch({
+     url:"http://47.95.221.147:8080/space?UserID=1&SpaceNo=2",
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.SpaceNo}')
+       console.log('the data of the response:${res.data.SurplusSpace}')
+       res.data.used = (res.data.MAXSpace - res.data.SurplusSpace).toFixed(2)
+       this.space2=res.data
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+     }
+   })
+
+   fetch.fetch({
+     url:"http://47.95.221.147:8080/space?UserID=1&SpaceNo=3",
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.SpaceNo}')
+       console.log('the data of the response:${res.data.SurplusSpace}')
+       res.data.used = (res.data.MAXSpace - res.data.SurplusSpace).toFixed(2)
+       this.space3=res.data
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+     }
+   })
+  },
+  onMenuPress() {
+    this.$app.$def.showMenu()
+  },
+
+    
+
+  
+  routerPush: function(index) {
+    if (index != 1) {
+      if (index == 0||index== 2){
+        if(index==0){router.replace({
+          uri: '/page0',
+          params: {
+            tabIndex: index,
+            userName: this.userName,
+            isLogin: this.isLogin
+          }
+        })}else{
+          router.replace({
+            uri: '/BarCodeDecoder',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }  
+      }else{
+        if(index==3){
+          router.replace({
+            uri: '/page3',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }else{
+          router.replace({
+            uri: '/page4',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })  
+        }
+        
+      }
+      
+    }
+  },
+  topic_preview(img) {
+    media.previewImage({
+      current: img, // 当前显示图片的http链接
+      uris: this.imgList ,// 需要预览的图片http链接列表
+      success: function() {
+    console.log('preview success')
+    },
+    fail: function(data, code) {
+    console.log('preview fail, code = ${code}')
+    }
+    })
+  }
+}
+
+
+</script>
+
+<style>
+  .content{
+    flex-direction: column;
+    align-items: center;/**左右居中 */
+    background-image: url('../Common/icon/容量.jpg');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+    /* 在水平方向和竖直方向上重复绘制 */
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+  }
+/**顶部内容 */
+  .top{
+    height: 300px;
+
+  }
+  .top-text{
+        margin-top: 100px;
+  }
+  .text-top-2{
+    font-size: 90px;
+    color: #f0f8ff;
+  }
+  .text-top-1{
+        font-size: 50px;
+    color: #f0f8ff;
+  }
+/**中部内容 */
+  .capacity-page {
+
+    flex-direction: column;
+    /*justify-content: center;上下居中*/
+    align-items: center;/**左右居中 */
+    /*background-color:#f3f3f3;
+   border-width: 1px;
+   border-color:#b9b9b9;*/
+    padding: 30px;
+    margin-top: 20px;
+  }
+  .out{
+    width: 100%;
+    flex-direction: column;
+  }
+  .capacity-item{
+    background-color:#ffffff;
+    border-radius: 40px;
+    margin-top: 30px;/**距离其他item距离 */
+    border-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;
+  }
+  .capacity-item-left{
+    flex-direction: column;
+    align-items: center;/**左右居中 */
+
+    padding: 20px;
+  }
+  .image{
+    border-radius: 40px;
+    width: 200px;
+    height: 150px;
+  }
+  .capacity-item-middle{
+    flex-direction: column;
+    padding: 20px;
+
+  }
+  .capacity-item-middle-name{
+    background-color:#9932cc;
+    border-radius: 40px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .star{
+    width: 40px;
+  }
+  .name{
+    font-size: 25px;
+    color:#f8f8ff;
+  }
+  .text-1{
+    font-size: 25px;
+    margin-top: 40px;
+    margin-left: 10px;
+  }
+  .inform{
+    flex-direction: column;
+    justify-content: center;
+
+    margin-left: 25px;
+  }
+  
+  .capacity-total{
+    margin-top: 5px;/**距离上一个text距离 */
+  }
+  .capacity-used{
+    margin-top: 10px;/**距离上一个text距离 */
+  }
+  .capacity-residue{
+    color:#0062d6;
+    margin-top: 10px;/**距离上一个text距离 */
+  }
+
+  .title {
+    font-size: 40px;
+    text-align: center;
+  }
+  /**底部栏 */
+   .foot-wrap {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+  padding: 0 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  border-top-color: #e6e6e6;
+  background-color: #f4f5f7;
+}
+.foot-box {
+  height: 110px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 15px;
+  padding-bottom: 10px;
+}
+.foot-box text {
+  font-size: 30px;
+}
+.button-middle{
+  position:fixed;
+  right: 285px;
+  bottom: 20px;
+  width: 170px;
+  height: 170px;
+  
+}
+.background {
+    
+     background-image: url('../Common/icon/容量.jpg');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+    /* 在水平方向和竖直方向上重复绘制 */
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+
+  }
+  .down-logo{
+  width: 110px;
+}
+</style>

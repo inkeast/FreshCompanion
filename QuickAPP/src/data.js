@@ -1,0 +1,64 @@
+export default {
+  tabData: [
+    {
+      label:'',
+      imgNormal:'/Common/images/home1.png',
+      imgActive:'/Common/images/home2.png',
+      url:'/page0'
+    },
+    {
+      label:'',
+      imgNormal:'/Common/images/bingxiang1.png',
+      imgActive:'/Common/images/bingxiang2.png',
+      url:'/page1'
+    },
+    {
+      label:'',
+      imgNormal:'/Common/images/2.png',
+      imgActive:'/Common/images/2.png',
+      url:'/page2'
+    },
+    {
+      label:'',
+      imgNormal:'/Common/images/food1.png',
+      imgActive:'/Common/images/food2.png',
+      url:'/page3'
+    },
+    {
+      label:'',
+      imgNormal:'/Common/images/wode1.png',
+      imgActive:'/Common/images/wode2.png',
+      url:'/page4'
+    }
+],
+food: [
+  {
+    label:'首页',
+    imgNormal:'/Common/images/home1.png',
+    imgActive:'/Common/images/home2.png',
+    url:'/page0',     
+    day:"1天"
+  },
+  {
+    label:'容量',
+    imgNormal:'/Common/images/bingxiang1.png',
+    imgActive:'/Common/images/bingxiang2.png',
+    url:'/page1',
+    day:"2天"
+  },
+  {
+    label:'',
+    imgNormal:'/Common/images/2.png',
+    imgActive:'/Common/images/2.png',
+    url:'/page2',
+    day:"3天"
+  },
+  {
+    label:'菜谱',
+    imgNormal:'/Common/images/food1.png',
+    imgActive:'/Common/images/food2.png',
+    url:'/page3',
+    day:"三天"
+  }
+],
+}

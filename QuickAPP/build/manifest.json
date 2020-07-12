@@ -1,0 +1,171 @@
+{
+  "package": "com.ice.demo",
+  "name": "鲜❄️伴",
+  "versionName": "1.0.0",
+  "versionCode": "1",
+  "minPlatformVersion": "1020",
+  "icon": "/Common/iceLogo.png",
+  "features": [
+    {
+      "name": "system.prompt"
+    },
+    {
+      "name": "system.router"
+    },
+    {
+      "name": "system.shortcut"
+    },
+    {
+      "name": "system.fetch"
+    },
+    {
+      "name": "system.media"
+    },
+    {
+      "name": "system.wifi"
+    },
+    {
+      "name": "system.notification"
+    },
+    {
+      "name": "system.barcode"
+    }
+  ],
+  "permissions": [
+    {
+      "origin": "*"
+    }
+  ],
+  "config": {
+    "logLevel": "off",
+    "background": {
+      "features": [
+        "system.audio",
+        "system.record",
+        "system.request",
+        "system.geolocation"
+      ]
+    },
+    "debug": true
+  },
+  "router": {
+    "entry": "page0",
+    "pages": {
+      "Demo": {
+        "component": "index"
+      },
+      "Capacity": {
+        "component": "index"
+      },
+      "About": {
+        "component": "index"
+      },
+      "Account": {
+        "component": "index"
+      },
+      "Register": {
+        "component": "index"
+      },
+      "page1": {
+        "component": "index"
+      },
+      "page2": {
+        "component": "index"
+      },
+      "page0": {
+        "component": "index"
+      },
+      "page3": {
+        "component": "index"
+      },
+      "page4": {
+        "component": "index"
+      },
+      "page0detail": {
+        "component": "index"
+      },
+      "page3detail": {
+        "component": "index"
+      },
+      "wifi": {
+        "component": "index"
+      },
+      "BarCodeDecoder": {
+        "component": "index"
+      }
+    },
+    "widgets": {
+      "CardDemo": {
+        "name": "CardDemo",
+        "description": "快应用卡片展示",
+        "component": "index",
+        "path": "/CardDemo",
+        "minPlatformVersion": 1032,
+        "targetManufactorys": [
+          "vivo"
+        ],
+        "features": [
+          {
+            "name": "system.fetch"
+          },
+          {
+            "name": "system.wifi"
+          },
+          {
+            "name": "system.notification"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "titleBar": true,
+    "titleBarBackgroundColor": "#9c60ff",
+    "titleBarTextColor": "#ffffff",
+    "menu": true,
+    "pages": {
+      "Demo": {
+        "titleBarText": "示例页",
+        "menu": false
+      },
+      "Capacity": {
+        "titleBarText": "容量查询"
+      },
+      "About": {
+        "menu": false
+      },
+      "Account": {
+        "menu": false,
+        "titleBarText": "登录页面"
+      },
+      "Register": {
+        "menu": false,
+        "titleBarText": "注册页面"
+      },
+      "page0": {
+        "titleBar": false
+      },
+      "page1": {
+        "titleBar": false
+      },
+      "page2": {
+        "titleBar": false
+      },
+      "page3": {
+        "titleBar": false
+      },
+      "page4": {
+        "titleBar": false
+      },
+      "page0detail": {
+        "titleBar": false
+      },
+      "page3detail": {
+        "titleBar": false
+      },
+      "BarCodeDecoder": {
+        "titleBar": false
+      }
+    }
+  }
+}

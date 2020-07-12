@@ -1,0 +1,348 @@
+<template>
+  <div class="page3">
+    <div class="top">
+      <div class="top-text">
+        <text class="text-top-1">推荐菜谱</text>
+      </div>
+      <input class="input-text" type="text" placeholder="🔍 请搜索……" > </input>
+      <div class="refresh" onclick="refresh">
+        <image class="photo-refresh" src="/Common/refresh.png"></image>
+      </div>
+      </div>
+
+      <list class="capacity-page">
+        <block >
+        
+          <list-item class="capacity-item" type="space-item" for={{menu.Menus}}>
+            <div class="image-text" >
+              <image class="image" src="{{$item.Image}}" onclick="topic_previewe"></image>
+            </div>
+            <div class="inform">
+              <text class="name">{{$item.Mname}}</text>
+              <div class="recommend">
+                <image class="recommend-photo" src="{{$item.RateImg}}"></image>
+              </div>  
+            </div>
+            <div class="detial" >
+                  <image src="/Common/details.png" onclick="ChangeDetail($item.Mname,$item.Image,$item.Ingredients,$item.Step)" ></image>
+              </div>
+          </list-item>
+        </block>
+      </list>
+      
+    
+  <div class="foot-wrap">
+      <div class="foot-box" for="tabList" onclick="routerPush($idx)">
+        <image class="down-logo" src="{{$idx===3?$item.imgActive:$item.imgNormal}}"></image>
+        
+      </div>
+    </div>
+
+     <div class="button-middle" onclick="routerPush(2)">
+    <image src="../Common/images/xiangji2.png"></image>
+  </div>
+
+  </div>
+    
+</template>
+
+<script>
+import router from '@system.router'
+import data from '../data.js'
+import media from '@system.media'
+import fetch from '@system.fetch'
+var i=0
+export default {
+  private: {
+    menu:[],
+    tabList: [],
+    
+  },
+  protected: {
+    isLogin: 0,
+    userName: '路过的一只'
+  },
+  onInit() {
+    let that = this
+    that.tabList = data.tabData
+     fetch.fetch({
+    
+      url:"http://47.95.221.147:8080/Menu?UserID=1&ReadCount="+i,
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.Image}')
+       console.log('the data of the response:${res.data.Ingredients')
+       console.log(res.data)
+       
+       
+       this.menu=res.data
+      
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+         
+     }
+   })
+  },
+  onMenuPress() {
+    this.$app.$def.showMenu()
+  },
+  routerPush: function(index) {
+    if (index != 3) {
+      if (index == 0||index== 1){
+        if(index==1){router.replace({
+          uri: '/page1',
+          params: {
+            tabIndex: index,
+            userName: this.userName,
+            isLogin: this.isLogin
+          }
+        })}else{
+          router.replace({
+            uri: '/page0',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }  
+      }else{
+        if(index==4){
+          router.replace({
+            uri: '/page4',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }else{
+          router.replace({
+            uri: '/BarCodeDecoder',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })  
+        }
+        
+      }
+      
+    }
+  },
+
+  ChangeDetail(Mname,Image,Ingredients,Steps){
+    //导航到详情页面并且将分类的id传递过去
+    router.push({
+      uri:'/page3detail',
+      params:{Mname,Image,Ingredients,Steps}
+    })
+  },
+  topic_preview(e) {
+    console.log(event.currentTarget.dataset.src)
+    let currentUrl = event.currentTarget.dataset.src
+    media.previewImage({
+      current: currentUrl, // 当前显示图片的http链接
+      urls: this.imgList ,// 需要预览的图片http链接列表
+      success: function() {
+    console.log('preview success')
+    },
+    fail: function(data, code) {
+    console.log('preview fail, code = ${code}')
+    }
+    })
+  },
+  refresh(e){
+    
+    fetch.fetch({
+    
+      url:"http://47.95.221.147:8080/Menu?UserID=1&ReadCount="+i++,
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.Image}')
+       console.log('the data of the response:${res.data.Ingredients')
+       console.log(res.data)
+       
+       
+       this.menu=res.data
+      
+     }
+  })
+}
+}
+
+ 
+</script>
+
+<style>
+
+  .page3{
+    flex-direction: column;
+    align-items: center;/**左右居中 */
+    background-image: url('../Common/icon/容量.jpg');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+    /* 在水平方向和竖直方向上重复绘制 */
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+    
+  }
+   .content{
+    flex-direction: column;
+    align-items: center;/**左右居中 */
+  }
+/**顶部内容 */
+  .top{
+    height: 300px;
+    width: 760px;
+     display: flex;
+    flex-direction: column;
+     align-content: center;
+     justify-content: center;
+     align-items: center;/**左右居中 */
+  }
+ 
+
+.top-text{
+  height: 180px;
+}
+  .text-top-1{
+    margin-top: 50px;
+    font-size: 60px;
+    color: #ffffff;
+    lines: 1;
+    
+  }
+/**中部内容 */
+  .middle{
+    
+    flex-direction: column;
+     background-image: url('../Common/icon/雪花背景.png');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+   
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+  }
+  .refresh{
+    height: 50px;
+    margin-left: 500px;
+    margin-top: 20px;
+  }
+  .photo-refresh{
+    margin-right: 0px;
+  }
+  .text-refresh{
+    margin-right: 0px;
+  }
+
+  .capacity-page {
+    flex-direction: column;
+    /*justify-content: center;上下居中*/
+    align-items: center;/**左右居中 */
+    /*background-color:#f3f3f3;*/
+   /* border-width: 1px;/**整个页面的边框 */
+    /*border-color:#b9b9b9;*/
+    padding: 30px;
+  }
+  .out{
+    width: 100%;
+    flex-direction: column;
+    padding-top: 30px;/**距离顶部距离 */
+    padding-left: 25px;
+    padding-right: 25px;
+    
+  }
+  .capacity-item{
+    background-color:#ffffff;
+    border-radius: 40px;
+    margin-top: 20px;/**距离其他item距离 */
+    border-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;
+    
+  }
+  .image-text{
+    flex-direction: column;
+    align-items: center;/**左右居中 */
+  }
+  .image{
+    padding: 30px;
+    padding-bottom: 30px;
+    width: 250px;
+    height: 200px;
+  }
+  .inform{
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 10px;
+    
+  }
+  .name{
+    font-size: 40px;
+  }
+  .recommend-photo{
+    width: 280px;
+    margin-top: 50px;
+  }
+  .detial{
+    width: 50px;
+    height: 50px;
+    margin-left: 90px;
+    margin-top: 90px;
+  }
+  /**底部栏 */
+  .foot-wrap {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+  padding: 0 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  border-top-color: #e6e6e6;
+  background-color: #f4f5f7;
+}
+.foot-box {
+  height: 110px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 15px;
+  padding-bottom: 10px;
+}
+.foot-box text {
+  font-size: 30px;
+}
+
+.input-text{
+  background-color: #ffffff;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #8f1fc4;
+  border-radius: 30px;
+  width: 650px;
+  height: 70px;
+}
+
+.button-middle{
+  position:fixed;
+  right: 285px;
+  bottom: 20px;
+  width: 170px;
+  height: 170px;
+  
+}
+.down-logo{
+  width: 110px;
+}
+</style>

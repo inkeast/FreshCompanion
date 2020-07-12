@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test</title>
+  <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+  <script src="./js/quagga.js"></script>
+</head>
+<body>
+<div id="canvanCode"></div>
+<script>
+  var resultCollector = Quagga.ResultCollector.create({
+    capture: true, // keep track of the image producing this result
+    capacity: 80,  // maximum number of results to store
+    filter: function(codeResult) {
+      return codeResult.format === "ean_13";
+    }
+  });
+  Quagga.init({
+    locate: true,
+    inputStream : {
+      name : "Live",
+      type : "LiveStream",
+      constraints: {
+        width: 1280,
+        height: 720
+      },
+      target: document.querySelector('#canvanCode')    // Or '#yourElement' (optional)
+
+    },
+    decoder : {
+      readers : ["ean_reader"],
+      debug: {
+        drawBoundingBox: false,
+        showFrequency: false,
+        drawScanline: false,
+        showPattern: false
+      },
+      multiple: false
+    },
+    locator:{
+      halfSample: true,
+      patchSize: "medium", // x-small, small, medium, large, x-large
+      debug: {
+        showCanvas: false,
+        showPatches: false,
+        showFoundPatches: false,
+        showSkeleton: false,
+        showLabels: false,
+        showPatchLabels: false,
+        showRemainingPatchLabels: false,
+        boxFromPatches: {
+          showTransformed: false,
+          showTransformedBox: false,
+          showBB: false
+        }
+      }
+    }
+  }, function(err) {
+    if (err) {
+      console.log(err);
+      alert(error.name || error);
+      return
+    }
+    console.log("Initialization finished. Ready to start");
+    Quagga.start();
+    Quagga.registerResultCollector(resultCollector);
+
+           // Quagga.onProcessed(function(data){
+           //     console.log(data)
+           // })
+    Quagga.onDetected(function(data){
+      console.log(data.codeResult.code)
+        alert(data.codeResult.code)
+      location.href='hap://app/com.ice.demo/page2?key='+data.codeResult.code;
+    })
+
+  });
+</script>
+</body>
+</html>

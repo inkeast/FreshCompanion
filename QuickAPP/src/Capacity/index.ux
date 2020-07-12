@@ -1,0 +1,136 @@
+<template>
+  <!-- template里只能有一个根节点 -->
+  <div class="capacity-page">
+    <div class="out">
+      <list-item class="capacity-item" type="space-item" >
+        <div class="image-text" >
+          <image class="image" src="/Common/space.png" onclick="showImage"></image>
+          <text class="text-1">点击查看大图</text>
+        </div>
+      <div class="inform">
+        <text class="name">上层冷冻柜</text>
+        <text class="capacity-total">总容量：80L</text>
+        <text class="capacity-used">已用空间：53L</text>
+        <text class="capacity-residue">sdad </text>
+      </div>
+    </list-item>
+   
+   <list-item class="capacity-item" type="space-item">
+        <div class="image-text">
+          <image class="image" src="/Common/space.png"></image>
+          <text class="text-1">点击查看大图</text>
+        </div>
+      <div class="inform">
+        <text class="name">上层冷冻柜</text>
+        <text class="capacity-total">总容量：80L</text>
+        <text class="capacity-used">已用空间：53L</text>
+        <text class="capacity-residue">剩余空间：37L</text>
+      </div>
+    </list-item><list-item class="capacity-item" type="space-item">
+        <div class="image-text">
+          <image class="image" src="/Common/space.png"></image>
+          <text class="text-1">点击查看大图</text>
+        </div>
+      <div class="inform">
+        <text class="name">上层冷冻柜</text>
+        <text class="capacity-total">总容量：80L</text>
+        <text class="capacity-used">已用空间：53L</text>
+        <text class="capacity-residue">剩余空间：37L</text>
+      </div>
+    </list-item>
+    </div>
+  </div>
+</template>
+
+<script>
+import fetch from '@system.fetch'
+export default {
+  private: {
+    space:[]
+  },
+  onInit() {
+    fetch.fetch({
+      url:'http://192.168.1.6:8080/categories',
+      responseType:"json",
+      method:'POST',
+      success:res=>{
+        console.log(`the status code of the response:${res.code}`)
+        console.log(`the data of the response:${res.data.Action}`)
+        console.log(`the data of the response:${res.data.ingredient[0].icon}`)
+       
+        this.space=res.data
+      },
+      fail:function(data,code){
+        console.log('handing fail,errMsg=${data}')
+        console.log('handing fail,errMsg=${code}')
+      }
+    })
+  },
+  onMenuPress() {
+    this.$app.$def.showMenu()
+  }
+}
+</script>
+
+<style>
+  .capacity-page {
+    flex-direction: column;
+    /*justify-content: center;上下居中*/
+    align-items: center;/**左右居中 */
+    background-color:#f3f3f3;
+    border-width: 1px;/**整个页面的边框 */
+    border-color:#b9b9b9;
+  }
+  .out{
+    width: 700px;
+
+    flex-direction: column;
+    padding-top: 30px;/**距离顶部距离 */
+  }
+  .capacity-item{
+    background-color:#ffffff;
+    border-radius: 40px;
+    margin-top: 20px;/**距离其他item距离 */
+    border-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;
+  }
+  .image-text{
+    flex-direction: column;
+    align-items: center;/**左右居中 */
+  }
+  .image{
+    padding: 30px;
+    padding-bottom: 5px;
+    width: 350px;
+    height: 250px;
+  }
+  .text-1{
+    font-size: 25px;
+    margin-bottom: 10px;
+  }
+  .inform{
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 10px;
+    
+  }
+  .name{
+    font-size: 40px;
+  }
+  .capacity-total{
+    margin-top: 25px;
+    margin-top: 20px;/**距离上一个text距离 */
+  }
+  .capacity-used{
+    margin-top: 10px;/**距离上一个text距离 */
+  }
+  .capacity-residue{
+    color:#0062d6;
+    margin-top: 10px;/**距离上一个text距离 */
+  }
+
+  .title {
+    font-size: 40px;
+    text-align: center;
+  }
+</style>

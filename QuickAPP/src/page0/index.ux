@@ -1,0 +1,344 @@
+<template>
+  <div class="background">
+  <list class="tutorial-page" >
+   
+    <!-- 商品列表 -->
+    <block>
+      <list-item type="product" class="content-item" for="{{categories.ingredients}}" >
+        <div class="content-item-left">
+          <image class="image" src="{{$item.icon}}"></image>
+        </div>
+        <div class="content-item-middle">
+          <div class="food-name">
+            <text class="name">{{$item.name}}</text>
+          </div>
+          <div class="food-inform">
+            <text class="food-day">保质期 {{$item.shelflife}}</text>
+          </div>
+          <div class="food-dinform" >
+            <text class="food-dday">还剩 {{$item.shelfdate}} 天</text>
+          </div>
+        </div>
+        <div class="content-item-right">
+          <image class="edit" src="/Common/page0/edit.png"  onclick="ChangeDetail($item.id,$item.name,$item.icon,$item.shelflife,$item.shelfdate)"></image>
+        </div>  
+      </list-item>
+      
+    </block>
+
+  </list>
+
+  <div class="foot-wrap">
+      <div class="foot-box" for="tabList" onclick="routerPush($idx)">
+        <image class="down-logo" src="{{$idx===0?$item.imgActive:$item.imgNormal}}"></image>
+      </div>
+    </div>
+    <div class="button-middle" onclick="routerPush(2)">
+    <image  src="../Common/images/xiangji2.png"></image>
+  </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import fetch from '@system.fetch'
+import prompt from '@system.prompt'
+import data from '../data.js'
+//获取当前时间的标准时间
+var newtime=new Date()
+//获取当前时间的时间戳
+var time1=newtime.getTime()
+//取得后台的标准时间
+var time2=new Array();
+//将后台的标准时间转化为时间戳存储
+var time3=new Array();
+//存储时间差
+var dis=new Array();
+// var shelfdate = new Array();
+
+export default {
+  private: {
+    space:[],
+    tabList: [],
+    categories:[ ],
+    h:0,
+    m:0,
+    s:0,
+    before :[],
+    count:100,
+    shelfdate:[]
+  },
+  protected: {
+    isLogin: 0,
+    userName: '路过的一只'
+  },
+  
+  onInit() {
+    let that = this
+
+     var now = new Date();
+
+    that.tabList = data.tabData
+   
+    fetch.fetch({
+     url:"http://47.95.221.147:8080/categories",
+     responseType:"json",
+     method:'POST',
+     success:res=>{
+       console.log('the status code of the response:${res.code}')
+       console.log('the data of the response:${res.data.ingredients}')
+       console.log('the data of the response:${res.data.ingredient[0].icon}')
+       
+       this.categories=res.data
+       for(var value of res.data.ingredients){
+         this.before=res.data.ingredients
+       }
+       var c = 0
+       for(var val of res.data.ingredients){
+         var fdate = new  Date((val.shelflife).slice(5,7)+"-"+(val.shelflife).slice(8,10)+"-"+(val.shelflife).slice(0,4))
+        this.shelfdate[c++] = parseInt((fdate  -  now)  /  1000  /  60  /  60  /24)
+       }
+       c = 0
+       for(let value of res.data.ingredients){
+         value["shelfdate"] = this.shelfdate[c++]
+       }
+
+        console.log(this.shelfdate)
+        console.log(this.before)
+        console.log(this.before[1].shelflife)
+      
+       
+       
+
+     },
+     fail:function(data,code){
+       console.log('handing fail,errMsg=${data}')
+       console.log('handing fail,errMsg=${code}')
+     }
+   })
+
+  
+
+  },
+  onReady() {
+      //excuteTask(task)
+  },
+  //将标准时间转化为时间戳
+
+  onMenuPress() {
+    this.$app.$def.showMenu()
+  },
+  routerPush: function(index) {
+    if (index != 0) {
+      if (index == 1||index== 2){
+        if(index==1){router.replace({
+          uri: '/page1',
+          params: {
+            tabIndex: index,
+            userName: this.userName,
+            isLogin: this.isLogin
+          }
+        })}else{
+          router.replace({
+            uri: '/BarCodeDecoder',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }  
+      }else{
+        if(index==3){
+          router.replace({
+            uri: '/page3',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })
+        }else{
+          router.replace({
+            uri: '/page4',
+            params: {
+              tabIndex: index,
+              userName: this.userName,
+              isLogin: this.isLogin
+            }
+          })  
+        }
+        
+      }
+      
+    }
+  },
+  ChangeDetail(id,name,icon,num,shelfdate){
+    //导航到详情页面并且将分类的id，name，icon，num等内容传递过去
+    router.push({
+      uri:'/page0detail',
+      params:{id,name,icon,num,shelfdate}
+    })
+  },
+  //标准时间转换为时间戳
+  timeChangetype(stringTime){
+       var timestamp2 = Date.parse(new Date(stringTime));
+
+      return timestamp2;},
+ //将标准时间转化为时间戳
+  getConsole(i){
+      time2[i]=timeChangetype(before[i].shelflife)
+      console.log(time2)
+    },
+  //刷新保质期的任务开始执行
+ task(){
+   console.log('定时任务开始执行:', new Date())
+   
+   for(var i=0;i<this.count;i++){
+     getConsole(i);
+   }
+
+  //计算后台传入的保质期截止时间的时间戳
+     for(var value of time2){
+       time3=timeChangetype(time2)
+       console.log(time3)
+     }
+  //计算后台传入时间与当前时间的天数的差值，用dis数组储存
+     
+     for(var value of time3){
+       dis= (time3-time1)/(1000*60*60*24)
+       dis=Math.floor(dis)
+     }
+  //返回数组存储保质期倒计时
+     for(var i=0;i<count;i++){
+       get(i)
+     }
+
+ },
+ get(i){
+ this.categories[i].shelflife=dis[i]
+ },
+  //每隔一天更新task中的数值
+  excuteTask(task) {
+    var timerId = setInterval(function () {
+        var date = new Date();
+        if (date.getHours() === 0 && date.getMinutes() === 0 && date.getSeconds() === 0) {
+            clearInterval(timerId)
+            task();
+            //每隔一天执行
+            setInterval(task, 24 * 60 * 60 * 1000)
+        }
+        console.log(date)
+    }, 1000)
+},
+
+  
+}
+
+
+
+
+</script>
+
+<style>
+  .background {
+   
+     background-image: url('../Common/icon/主页背景.jpg');
+    /* 等比例缩放背景图片到宽度为组件宽的一半 */
+    background-size: cover;
+    /* 在水平方向和竖直方向上重复绘制 */
+    
+    /* 背景图片处于组件中央 */
+    background-position: center;
+    padding-left :20px; 
+    padding-right :20px; 
+  }
+  .tutorial-page{
+    margin-top: 450px;/**距离其他item距离 */    
+    margin-bottom: 150px;
+  }
+  .content-item{
+    background-color:#ffffff;
+    border-radius: 40px;
+    height: 250px;
+    margin-top: 20px;
+    border-width: 1px;/**每个item的边框 */
+    border-color:#b9b9b9;  
+    padding: 20px;
+  }
+  .content-item-left{
+    width: 200px;
+  height: 200px;
+  border-radius: 1000000px; 
+  justify-content: center;
+  align-items: center;/**左右居中 */
+  border-width: 3px;/**整个页面的边框 */
+  border-color:#80d6f7;
+  padding: 20px;
+  border-style: dotted;
+  margin-top: 7px;
+  }
+  .image{
+    width: 110px;
+  }
+  .content-item-middle{
+    flex-direction: column;
+    padding: 20px;
+    margin-left: 20px;
+  }
+  .name{
+    font-size: 50px;
+    color: #000000;
+  }
+  .food-inform{
+    margin-top: 35px;
+  }
+  .food-day{
+    margin-left: 0px;
+  }
+  .content-item-right{
+    width: 100px;
+    padding-left: 0px;
+    padding: 10px;
+    margin-left: 40px;
+  }
+  .edit{
+    width: 50px;
+    margin-left:20px;
+  }
+  .foot-wrap {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+  padding: 0 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  border-top-color: #e6e6e6;
+  background-color: #f4f5f7;
+}
+.foot-box {
+  height: 110px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 15px;
+  padding-bottom: 10px;
+}
+.foot-box text {
+  font-size: 30px;
+}
+
+.button-middle{
+  position:fixed;
+  right: 285px;
+  bottom: 20px;
+  width: 170px;
+  height: 170px;
+  
+}
+.down-logo{
+  width: 110px;
+}
+
+</style>
